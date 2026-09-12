@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Screen Assistant</string>
+    <string name="app_name">BitAssist</string>
     <string name="greeting">Hi, how can I help?</string>
     <string name="action_search">Search screen</string>
     <string name="action_translate">Translate</string>
