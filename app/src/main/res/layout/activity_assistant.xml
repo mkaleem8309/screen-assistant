@@ -15,6 +15,38 @@
         android:background="@color/card_bg"
         android:visibility="gone" />
 
+    <!-- Darkens the screenshot a bit (~20% black) so the buttons/text on top
+         of it stay legible against any content. Purely visual — OCR still
+         reads from the original, undimmed bitmap in CaptureHolder. -->
+    <View
+        android:id="@+id/dim_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/ocr_result_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="88dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:maxHeight="280dp"
+        android:background="@color/card_bg"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/ocr_result_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textIsSelectable="true"
+            android:textSize="14sp" />
+    </ScrollView>
+
     <LinearLayout
         android:id="@+id/assistant_card"
         android:layout_width="match_parent"
