@@ -61,5 +61,17 @@
                 android:resource="@xml/recognition_service" />
         </service>
 
+        <!-- Needed to put a copied screenshot on the clipboard as an image:
+             the clipboard only accepts a content:// Uri, not a raw Bitmap. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 </manifest>

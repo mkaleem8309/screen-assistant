@@ -89,7 +89,24 @@
         android:id="@+id/captured_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:background="@color/card_bg"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/btn_copy_screenshot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:fitsSystemWindows="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@drawable/pill_button_bg"
+        android:text="@string/action_copy"
+        android:textColor="@color/text_primary"
+        android:textSize="13sp"
         android:visibility="gone" />
 </FrameLayout>
