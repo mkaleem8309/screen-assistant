@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
-
     <application
         android:allowBackup="true"
         android:icon="@android:drawable/sym_def_app_icon"
@@ -25,22 +22,28 @@
             android:name=".AssistantActivity"
             android:theme="@style/Theme.ScreenAssistant.Transparent"
             android:excludeFromRecents="true"
-            android:exported="true"
-            android:launchMode="singleTask">
-            <!-- Lets the system launch this activity as the device's assistant:
-                 selectable under Settings > Apps > Default apps > Digital assistant app,
-                 and invoked by the platform's assist gesture/action (long-press home,
-                 gesture-nav corner swipe, etc.) instead of only our own overlay swipe. -->
-            <intent-filter>
-                <action android:name="android.intent.action.ASSIST" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <!-- No ACTION_ASSIST intent filter anymore — this activity is only ever
+             started internally, by AssistantSession, after the system hands us
+             the screenshot. It's not itself the assistant entry point. -->
 
         <service
-            android:name=".CaptureService"
-            android:foregroundServiceType="mediaProjection"
-            android:exported="false" />
+            android:name=".AssistantVoiceInteractionService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.voice.VoiceInteractionService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.voice_interaction"
+                android:resource="@xml/voice_interaction_service" />
+        </service>
+
+        <service
+            android:name=".AssistantSessionService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:exported="true" />
 
     </application>
 </manifest>
