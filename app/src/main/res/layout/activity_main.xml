@@ -8,25 +8,17 @@
     android:background="@color/card_bg">
 
     <TextView
-        android:id="@+id/status_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_primary"
         android:textSize="15sp"
         android:layout_marginBottom="20dp"
-        android:text="@string/grant_overlay_prompt" />
-
-    <Button
-        android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_service" />
+        android:text="@string/set_assistant_prompt" />
 
     <Button
         android:id="@+id/btn_set_assistant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="@string/set_default_assistant" />
 
 </LinearLayout>

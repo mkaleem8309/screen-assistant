@@ -1,25 +1,28 @@
-# Screen Assistant — bluff prototype
+# BitAssist
 
-Mimics assistant invocation + minimal UI. No OCR/capture wired yet — stubs only.
+Barebones: assistant-sheet UI + real Android assist invocation. Nothing else.
 
 ## What it does
-1. `MainActivity` — requests "Display over other apps" permission, starts `OverlayService`.
-2. `OverlayService` — pins an invisible ~70x90dp touch strip to the bottom-right corner (any app, system-wide). Swipe up from it past ~24dp threshold → launches `AssistantActivity`.
-3. `AssistantActivity` — transparent bottom-sheet, matches the reference UI: rainbow dot + "Hi, how can I help?" + two pill buttons ("Search screen", "Translate") + rainbow accent bar. Tap outside the card to dismiss. Buttons currently just toast — wire real OCR/search pipeline into their click listeners.
+1. `MainActivity` — launcher entry. Only job: a "Set as default assistant" button that
+   opens Settings > Assist & voice input, where the user picks BitAssist as their default
+   assistant. No API lets an app set this for itself, so this is just a shortcut to that
+   screen — nothing else lives here.
+2. `AssistantActivity` — the assistant sheet UI: rainbow dot + "Hi, how can I help?" + two
+   pill buttons ("Search screen", "Translate") + rainbow accent bar. Tap outside the card
+   to dismiss. Buttons currently just toast — wire the real OCR/search pipeline into their
+   click listeners.
+3. Invocation — `AssistantActivity` declares an `ACTION_ASSIST` intent filter, so once
+   BitAssist is picked as default, the OS launches it directly on its own assist trigger
+   (long-press home in 3-button nav, gesture-nav corner swipe, etc.) — no custom overlay.
 
 ## Run it
 1. Open in Android Studio (Hedgehog+), let Gradle sync.
-2. Run on device/emulator, API 26+.
-3. Tap "Start corner-gesture assistant" → grant overlay permission → tap again.
-4. Home out / open any app, swipe up from bottom-right corner.
+2. Install on device/emulator, API 26+.
+3. Open BitAssist, tap "Set as default assistant", pick BitAssist in the list.
+4. Trigger assist as normal for your device (long-press home / corner swipe / etc.).
 
 ## Known limitations (by design, for this stage)
-- This is NOT real Android Assistant invocation (that needs `VoiceInteractionService` + being set as default assistant — heavier, more restricted path). Corner-swipe overlay is the practical stand-in.
-- No screen capture yet (needs `MediaProjection`, Phase 1 in the reqs doc).
-- No accessibility-service fallback for the gesture; pure touch-overlay only.
-- Foreground service uses `specialUse` type — Play Store will want a justification string if this ever ships.
-
-## Next per the reqs doc phases
-- Phase 1: wire `MediaProjection` to actually capture the screen on trigger.
-- Phase 2: region selection overlay + crop + magnifier.
-- Phase 3: local OCR (ML Kit) behind the "Search screen"/"Translate" buttons.
+- No screen capture yet (needs `MediaProjection`).
+- No OCR pipeline — buttons are stubs.
+- No `VoiceInteractionService` — this is the lightweight `ACTION_ASSIST` path, not a full
+  voice-interaction replacement.

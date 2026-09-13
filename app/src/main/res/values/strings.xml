@@ -4,8 +4,6 @@
     <string name="greeting">Hi, how can I help?</string>
     <string name="action_search">Search screen</string>
     <string name="action_translate">Translate</string>
-    <string name="overlay_channel_name">Screen Assistant Overlay</string>
-    <string name="grant_overlay_prompt">Enable "Display over other apps" for Screen Assistant, then reopen.</string>
-    <string name="start_service">Start corner-gesture assistant</string>
+    <string name="set_assistant_prompt">Set BitAssist as your device\'s default assistant to invoke it from anywhere.</string>
     <string name="set_default_assistant">Set as default assistant</string>
 </resources>
