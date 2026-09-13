@@ -7,4 +7,5 @@
     <string name="overlay_channel_name">Screen Assistant Overlay</string>
     <string name="grant_overlay_prompt">Enable "Display over other apps" for Screen Assistant, then reopen.</string>
     <string name="start_service">Start corner-gesture assistant</string>
+    <string name="set_default_assistant">Set as default assistant</string>
 </resources>

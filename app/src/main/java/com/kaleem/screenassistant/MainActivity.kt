@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         statusText = findViewById(R.id.status_text)
         val startBtn: Button = findViewById(R.id.btn_start)
+        val assistantBtn: Button = findViewById(R.id.btn_set_assistant)
 
         startBtn.setOnClickListener {
             if (!Settings.canDrawOverlays(this)) {
@@ -30,6 +31,13 @@ class MainActivity : AppCompatActivity() {
             } else {
                 launchOverlayService()
             }
+        }
+
+        assistantBtn.setOnClickListener {
+            // Opens the system "Assist & voice input" screen where the user picks
+            // BitAssist as their Default assistant app. There's no API to set this
+            // programmatically — Android requires the explicit user step.
+            startActivity(Intent(Settings.ACTION_VOICE_INPUT_SETTINGS))
         }
     }
 

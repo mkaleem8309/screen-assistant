@@ -26,8 +26,17 @@
             android:name=".AssistantActivity"
             android:theme="@style/Theme.ScreenAssistant.Transparent"
             android:excludeFromRecents="true"
-            android:exported="false"
-            android:launchMode="singleTask" />
+            android:exported="true"
+            android:launchMode="singleTask">
+            <!-- Lets the system launch this activity as the device's assistant:
+                 selectable under Settings > Apps > Default apps > Digital assistant app,
+                 and invoked by the platform's assist gesture/action (long-press home,
+                 gesture-nav corner swipe, etc.) instead of only our own overlay swipe. -->
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".OverlayService"
