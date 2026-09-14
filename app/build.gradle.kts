@@ -41,4 +41,11 @@ dependencies {
     // Bundled (not Play-Services-backed) model: ships in the APK, works fully
     // offline immediately, no download step, no Play Services requirement.
     implementation("com.google.mlkit:text-recognition:16.0.1")
+    // On-device translation: downloads a small language-pack model once, then
+    // every translation runs fully locally — no text or screenshot is ever
+    // sent to a server for translation itself.
+    implementation("com.google.mlkit:translate:17.0.3")
+    // Auto-detects the source language from the OCR'd text (bundled, no
+    // network needed for detection itself).
+    implementation("com.google.mlkit:language-id:17.0.6")
 }

@@ -5,6 +5,7 @@
     <string name="action_search">Search screen</string>
     <string name="action_translate">Translate</string>
     <string name="action_copy">Copy</string>
+    <string name="translate_to_english">\u2192 English</string>
     <string name="set_assistant_prompt">Set BitAssist as your device\'s default assistant to invoke it from anywhere.</string>
     <string name="set_default_assistant">Set as default assistant</string>
 </resources>

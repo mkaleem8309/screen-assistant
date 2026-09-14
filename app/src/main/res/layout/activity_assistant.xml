@@ -25,27 +25,31 @@
         android:background="#33000000"
         android:visibility="gone" />
 
-    <ScrollView
-        android:id="@+id/ocr_result_scroll"
+    <!-- Lens-style translation patches get added here at runtime, each one
+         positioned over the OCR block it translates. -->
+    <FrameLayout
+        android:id="@+id/translation_overlay_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="88dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:maxHeight="280dp"
-        android:background="@color/card_bg"
-        android:padding="16dp"
-        android:visibility="gone">
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/ocr_result_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_primary"
-            android:textIsSelectable="true"
-            android:textSize="14sp" />
-    </ScrollView>
+    <TextView
+        android:id="@+id/btn_target_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="16dp"
+        android:fitsSystemWindows="true"
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text="@string/translate_to_english"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:shadowColor="#CC000000"
+        android:shadowDx="0"
+        android:shadowDy="1"
+        android:shadowRadius="4"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/assistant_card"
