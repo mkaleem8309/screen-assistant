@@ -15,9 +15,6 @@ import androidx.core.content.FileProvider
 import androidx.core.view.WindowCompat
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Locale
@@ -32,9 +29,10 @@ import java.util.Locale
  * "Search screen" is a TODO stub — its real job is region-select then
  * Google search on that region, not OCR, so it doesn't touch OCR at all.
  *
- * "Translate" is the Lens-style flow: OCR with per-line positions, detect
- * the source language, translate each line on-device, and render the
- * translated text directly over where the original line was.
+ * "Translate" is the Lens-style flow: OCR with per-line positions (via
+ * Tesseract — see TesseractOcr.kt for why, not ML Kit), detect the source
+ * language, translate each line on-device, and render the translated text
+ * directly over where the original line was.
  */
 class AssistantActivity : AppCompatActivity() {
 
@@ -62,10 +60,6 @@ class AssistantActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContentView(R.layout.activity_assistant)
-
-        findViewById<View>(R.id.root_scrim).setOnClickListener { finish() }
-        // Prevent taps on the card itself from bubbling to the scrim and closing it.
-        findViewById<View>(R.id.assistant_card).setOnClickListener { }
 
         val capturedPreview = findViewById<ImageView>(R.id.captured_preview)
         val dimOverlay = findViewById<View>(R.id.dim_overlay)
@@ -101,26 +95,22 @@ class AssistantActivity : AppCompatActivity() {
     // ---- Translate: Lens-style positioned overlay ----
 
     private fun startTranslateFlow(bitmap: Bitmap) {
-        Toast.makeText(this, "Reading screen\u2026", Toast.LENGTH_SHORT).show()
-        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        recognizer.process(InputImage.fromBitmap(bitmap, 0))
-            .addOnSuccessListener { visionText ->
-                val blocks = visionText.textBlocks.flatMap { block ->
-                    block.lines.mapNotNull { line ->
-                        val box = line.boundingBox ?: return@mapNotNull null
-                        OcrBlock(line.text, box)
-                    }
-                }
+        TesseractOcr.recognize(
+            context = this,
+            bitmap = bitmap,
+            onProgress = { status -> Toast.makeText(this, status, Toast.LENGTH_SHORT).show() },
+            onResult = { blocks ->
                 if (blocks.isEmpty()) {
                     Toast.makeText(this, "No text found on screen", Toast.LENGTH_SHORT).show()
-                    return@addOnSuccessListener
+                } else {
+                    cachedBlocks = blocks
+                    detectLanguageAndTranslate(bitmap, blocks)
                 }
-                cachedBlocks = blocks
-                detectLanguageAndTranslate(bitmap, blocks)
-            }
-            .addOnFailureListener {
+            },
+            onError = {
                 Toast.makeText(this, "OCR failed", Toast.LENGTH_SHORT).show()
             }
+        )
     }
 
     private fun detectLanguageAndTranslate(bitmap: Bitmap, blocks: List<OcrBlock>) {
@@ -141,7 +131,6 @@ class AssistantActivity : AppCompatActivity() {
     private fun translateAndRender(bitmap: Bitmap, blocks: List<OcrBlock>, sourceLang: String) {
         val container = findViewById<FrameLayout>(R.id.translation_overlay_container)
         val imageView = findViewById<ImageView>(R.id.captured_preview)
-        Toast.makeText(this, "Translating\u2026", Toast.LENGTH_SHORT).show()
         TranslationOverlay.render(
             context = this,
             container = container,

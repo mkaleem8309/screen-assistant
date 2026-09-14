@@ -3,9 +3,7 @@
     android:id="@+id/root_scrim"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/scrim"
-    android:clickable="true"
-    android:focusable="true">
+    android:background="@color/scrim">
 
     <ImageView
         android:id="@+id/captured_preview"
@@ -62,9 +60,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="24dp"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:clickable="true"
-        android:focusable="true">
+        android:paddingEnd="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
