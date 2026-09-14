@@ -151,10 +151,26 @@ object TranslationOverlay {
 
         // Cap width so a long translation wraps to multiple lines instead of
         // running off-screen or blowing straight through its neighbors.
-        // TextView wraps automatically once its measured width is
-        // constrained below the text's natural single-line width.
         val lineWidthPx = (box.width() * scale).toInt().coerceAtLeast(1)
         val maxWidthPx = (viewWidth * 0.9f).toInt().coerceAtLeast(lineWidthPx)
+
+        // Spread short translations out to feel natural instead of bunching
+        // in the middle of a wide box: if the text's natural single-line
+        // width is smaller than the line it's replacing, add letter-spacing
+        // to expand it toward that width. This is a simple approximation of
+        // real justification (which Android's TextView only applies to
+        // wrapped multi-line text, not a single line) — good enough here
+        // since it's cheap and doesn't need custom layout code.
+        val naturalWidthPx = patch.paint.measureText(text)
+        if (naturalWidthPx > 0f && text.length > 1 && naturalWidthPx < lineWidthPx) {
+            val extraPx = lineWidthPx - naturalWidthPx
+            val letterSpacingEm = (extraPx / (text.length - 1) / patch.textSize).coerceIn(0f, 0.25f)
+            patch.letterSpacing = letterSpacingEm
+        }
+
+        // TextView wraps automatically once its measured width is
+        // constrained below the text's (now possibly spread-out) natural
+        // single-line width.
         patch.measure(
             View.MeasureSpec.makeMeasureSpec(maxWidthPx, View.MeasureSpec.AT_MOST),
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)

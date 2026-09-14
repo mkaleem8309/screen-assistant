@@ -20,6 +20,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Locale
 
 /**
  * The minimal "what can I do" sheet, launched by AssistantSession once the
@@ -37,15 +38,14 @@ import java.io.FileOutputStream
  */
 class AssistantActivity : AppCompatActivity() {
 
-    // Small fixed list for the MVP language picker (per the spec: don't let
-    // a full language list complicate the first pass, but keep the
-    // architecture able to grow — this list is the only thing to extend).
-    private val targetLanguages = listOf(
-        "English" to TranslateLanguage.ENGLISH,
-        "Urdu" to TranslateLanguage.URDU,
-        "Hindi" to TranslateLanguage.HINDI,
-        "Tamil" to TranslateLanguage.TAMIL
-    )
+    // Full set of languages ML Kit's on-device translator actually supports —
+    // this is the built-in "source" for available languages: no network
+    // call, no external API, just the library's own catalog.
+    private val targetLanguages: List<Pair<String, String>> by lazy {
+        TranslateLanguage.getAllLanguages()
+            .map { code -> displayName(code) to code }
+            .sortedBy { it.first }
+    }
     private var targetLanguage = TranslateLanguage.ENGLISH
     private var targetLanguageLabel = "English"
 
@@ -76,7 +76,6 @@ class AssistantActivity : AppCompatActivity() {
         if (bitmap != null) {
             capturedPreview.setImageBitmap(bitmap)
             capturedPreview.visibility = View.VISIBLE
-            capturedPreview.setOnClickListener { finish() }
             dimOverlay.visibility = View.VISIBLE
 
             copyButton.visibility = View.VISIBLE
@@ -186,6 +185,13 @@ class AssistantActivity : AppCompatActivity() {
     }
 
     // ---- Screenshot clipboard copy (unchanged from before) ----
+
+    private fun displayName(languageCode: String): String {
+        val name = Locale(languageCode).displayLanguage
+        // Fall back to the raw code for the handful of ML Kit codes Locale
+        // doesn't recognize, rather than showing an empty label.
+        return name.ifBlank { languageCode }.replaceFirstChar { it.uppercase() }
+    }
 
     private fun copyScreenshotToClipboard(bitmap: Bitmap) {
         try {
